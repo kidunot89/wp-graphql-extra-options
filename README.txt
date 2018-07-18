@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== WPGraphQL Extra Options ===
 Contributors: (this should be a list of wordpress.org userid's)
 Donate link: https://axistaylor.com
 Tags: comments, spam

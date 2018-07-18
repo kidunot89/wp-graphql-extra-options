@@ -182,9 +182,13 @@ class Wp_Graphql_Extra_Options_Admin {
 		
 		switch( $name ) {
 			case '_selected':
-			$_selected = $this->json_decode( get_option( $this->option_name . '_selected' ), true );
-			if ( empty( $_selected ) ) $_selected = [];
-			return $_selected;
+				if (! isset( $this->_selected )) {
+					$this->_selected = json_decode( get_option( $this->option_name . '_selected' ), true );
+				}
+				if ( is_null( $this->_selected ) ) {
+					$this->_selected = [];
+				}
+				return $this->_selected;
 		}
 	}
 

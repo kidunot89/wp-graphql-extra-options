@@ -291,7 +291,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	 */
 	public function wp_graphql_extra_options_sanitize_selected( $selected ) {
 
-		$lines = explode( '\n', $selected);
+		$lines = explode( PHP_EOL, $selected);
 		$settings = array();
 		foreach( $lines as $line ) {
 			

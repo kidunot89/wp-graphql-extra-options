@@ -294,12 +294,33 @@ class Wp_Graphql_Extra_Options_Admin {
 		$lines = explode( '\n', $selected);
 		$settings = array();
 		foreach( $lines as $line ) {
+			
+			/**
+			 * Validate and sanitize line
+			 */
 			$parts = explode( $this->delimiter, $line );
-			if ( $parts[0] !== '') {
-				$settings[ sanitize_text_field( $parts[0] ) ] = [
-					'type' => trim( sanitize_text_field( $parts[1] ) ),
-					'description' => trim( sanitize_text_field( $parts[2] ) )
-				];
+			
+			$length = count ( $parts );
+			if ( $length < 2 || $length > 3 ) {
+				// TODO - throw invalid number of arguments error
+				continue;
+			}
+
+			if ( false === $parts[0] || in_array( $parts[0], $settings ) ) {
+				// TODO - throw invalid setting name error
+				continue;
+			}
+			$name = sanitize_text_field( $parts[0] );
+			$settings[ $name ] = [];
+	
+			if ( false === $parts[1] ) {
+				// TODO - throw invalid setting type error
+				continue;
+			}
+			$settings[ $name ][ 'type' ] = sanitize_text_field( $parts[1] );
+
+			if ( false !== $parts[2] ) {
+				$settings[ $name ][ 'description' ] = sanitize_text_field( $parts[2] );
 			}
 		}
 

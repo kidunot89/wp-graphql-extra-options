@@ -178,6 +178,16 @@ class Wp_Graphql_Extra_Options_Admin {
 
 	}
 
+	public function __get( $name ) {
+		
+		switch( $name ) {
+			case '_selected':
+			$_selected = $this->json_decode( get_option( $this->option_name . '_selected' ), true );
+			if ( empty( $_selected ) ) $_selected = [];
+			return $_selected;
+		}
+	}
+
 	/**
 	 * Add 'show_in_graphql' to selected settings args
 	 *
@@ -185,7 +195,8 @@ class Wp_Graphql_Extra_Options_Admin {
 	 */
 	public function set_graphql_settings_fields( $fields ) {
 
-		$settings = json_decode( get_option( $this->option_name . '_selected' ), true );
+		$settings = $this->_selected;
+
 		$field_keys = array_keys( $fields );
 		foreach( $settings as $key => $value ) {
 			if ( ! in_array( $key, $field_keys )) {
@@ -246,7 +257,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	 * @since  1.0.0
 	 */
 	public function wp_graphql_extra_options_selected_cb() {
-		$settings = json_decode( get_option( $this->option_name . '_selected' ), true );
+		$settings = $this->_selected;
 		?>		
 			<textarea class="wpgeo-selected" name="<?php echo $this->option_name . '_selected' ?>" id="<?php echo $this->option_name . '_selected' ?>"><?php
 				foreach( $settings as $key => $value ) {

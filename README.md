@@ -1,4 +1,5 @@
 # WPGraphQL Extra Options
+This plugin was made to be a temporary helper to the WPGraphQL plugin. It allows for the addition of settings not loaded through the Settings API to be accessed through GraphQL request.
 
 ## Quick Install
 Clone repository or zipped master to wordpress plugin directory and activate.

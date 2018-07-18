@@ -278,6 +278,8 @@ class Wp_Graphql_Extra_Options_Admin {
 				<?php echo "Ex. \"page_on_front{$this->delimiter}integer{$this->delimiter}static page used as home page" ?>
 				<br />
 				<?php echo "page_for_posts{$this->delimiter}integer{$this->delimiter}page used to display blog posts\"." ?>
+				<br />
+				<?php echo "<a href=\"https://codex.wordpress.org/Option_Reference\" target=\"_blank\">Option Reference</a>
 			</span>
 		<?php
 	}

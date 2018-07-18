@@ -277,7 +277,7 @@ class Wp_Graphql_Extra_Options_Admin {
 				<br />
 				<?php echo "Ex. \"page_on_front{$this->delimiter}integer{$this->delimiter}static page used as home page" ?>
 				<br />
-				<?php echo "page_of_posts{$this->delimiter}integer{$this->delimiter}page used to display blog posts\"." ?>
+				<?php echo "page_for_posts{$this->delimiter}integer{$this->delimiter}page used to display blog posts\"." ?>
 			</span>
 		<?php
 	}

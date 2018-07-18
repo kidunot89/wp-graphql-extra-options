@@ -279,7 +279,7 @@ class Wp_Graphql_Extra_Options_Admin {
 				<br />
 				<?php echo "page_for_posts{$this->delimiter}integer{$this->delimiter}page used to display blog posts\"." ?>
 				<br />
-				<?php echo "<a href=\"https://codex.wordpress.org/Option_Reference\" target=\"_blank\">Option Reference</a>
+				<?php echo '<a href="https://codex.wordpress.org/Option_Reference" target="_blank">Option Reference</a>' ?>
 			</span>
 		<?php
 	}

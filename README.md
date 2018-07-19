@@ -17,7 +17,7 @@ page_for_posts<->integer<->id of page displaying blog posts
 ```
 
 ## GraphQL Request Example
-All selected setting will under the `allSettings` type in camelCase.
+All selected settings will appear under the `allSettings` type in camelCase.
 
 ```
 {

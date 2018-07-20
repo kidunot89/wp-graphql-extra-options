@@ -119,17 +119,6 @@ class Wp_Graphql_Extra_Options_Admin {
 	}
 
 	/**
-	 * Load ThemeModQuery and ThemeModType
-	 * 
-	 * @since  1.0.1
-	 */
-	public function load_theme_mod() {
-		if ( class_exists( 'WPGraphQL\Type\WPObjectType') ) {
-			include_once 'theme-mod-query.php';
-		}
-	}
-
-	/**
 	 * Add an options page under the Settings submenu
 	 *
 	 * @since  1.0.0

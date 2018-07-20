@@ -102,7 +102,12 @@ class Wp_Graphql_Extra_Options {
 		/**
 		 * Load WPGraphQL if not loaded
 		 */
-		include_once( ABSPATH . PLUGINDIR . '/wp-graphql/vendor/autoload.php' );
+		include_once ABSPATH . PLUGINDIR . '/wp-graphql/vendor/autoload.php';
+
+		/**
+		 * Load ThemeModType & ThemeModQuery
+		 */
+		include_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/theme-mod-query.php';
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
@@ -165,9 +170,6 @@ class Wp_Graphql_Extra_Options {
 		// Options Page
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_setting' );
-
-		// Load ThemeModType & ThemeModQuery
-		$this->loader->add_action( 'plugins_loaded', $plugin_admin, 'load_theme_mod');
 		
 		// Enable selected setting for WPGraphQL
 		$this->loader->add_filter( 'graphql_settings_fields', $plugin_admin, 'graphql_settings_fields', 10 );

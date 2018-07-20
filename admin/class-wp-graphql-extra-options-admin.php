@@ -1,9 +1,5 @@
 <?php
 
-	include_once 'theme-mod-query.php';
-
-	use WPGraphQLExtra\Type\ThemeMod\ThemeModQuery;
-
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -120,6 +116,17 @@ class Wp_Graphql_Extra_Options_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-graphql-extra-options-admin.js', array( 'jquery' ), $this->version, false );
 
+	}
+
+	/**
+	 * Load ThemeModQuery and ThemeModType
+	 * 
+	 * @since  1.0.1
+	 */
+	public function load_theme_mod() {
+		if ( class_exists( 'WPGraphQL\Type\WPObjectType') ) {
+			include_once 'theme-mod-query.php';
+		}
 	}
 
 	/**
@@ -318,8 +325,9 @@ class Wp_Graphql_Extra_Options_Admin {
 		/**
 		 * Build ThemeModQuery field with allowed theme modifications
 		 */
-		$fields[ 'themeMods' ] = ThemeModQuery::root_query( $allowed_mods );
-		
+		if( class_exists ( 'WPGraphQLExtra\Type\ThemeMod\ThemeModQuery' )) {
+			$fields[ 'themeMods' ] = WPGraphQLExtra\Type\ThemeMod\ThemeModQuery::root_query( $allowed_mods );
+		}
 		return $fields;
 	}
 

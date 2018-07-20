@@ -161,6 +161,8 @@ class Wp_Graphql_Extra_Options {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_setting' );
 
+		// Load ThemeModType & ThemeModQuery
+		$this->loader->add_action( 'plugins_loaded', $plugin_admin, 'load_theme_mod');
 		
 		// Enable selected setting for WPGraphQL
 		$this->loader->add_filter( 'graphql_settings_fields', $plugin_admin, 'graphql_settings_fields', 10 );

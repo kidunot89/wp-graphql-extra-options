@@ -1,4 +1,5 @@
 <?php
+	use WPGraphQLExtra\Type\ThemeMod\ThemeModQuery;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -305,18 +306,18 @@ class Wp_Graphql_Extra_Options_Admin {
 		$all_mods = array_keys ( get_theme_mods() );
 
 		$allowed_mods = [];
-		foreach ($all_mods as $mod ) {
-			if ( !in_array( $mod, $exclude_mods ) ) {
-				$allowed_mods[] = $mod;
+		if ( ! empty ( $exclude_mods ) ) {
+			foreach ($all_mods as $mod ) {
+				if ( ! in_array( $mod, $exclude_mods ) ) {
+					$allowed_mods[] = $mod;
+				}
 			}
 		}
 
 		/**
 		 * Build ThemeModQuery field with allowed theme modifications
 		 */
-		if( class_exists ( 'WPGraphQLExtra\Type\ThemeMod\ThemeModQuery' )) {
-			$fields[ 'themeMods' ] = WPGraphQLExtra\Type\ThemeMod\ThemeModQuery::root_query( $allowed_mods );
-		}
+		$fields[ 'themeMods' ] = ThemeModQuery::root_query( $allowed_mods );
 		return $fields;
 	}
 

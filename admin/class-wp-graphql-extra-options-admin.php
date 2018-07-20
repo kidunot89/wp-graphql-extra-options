@@ -225,7 +225,7 @@ class Wp_Graphql_Extra_Options_Admin {
 
 			case '_selected':
 				if (! isset( $this->$name )) {
-					$this->$name = json_decode( get_option( $this->option_name . '_selected', '{}' ), true );
+					$this->$name = json_decode( get_option( $this->option_name . '_selected', '' ), true );
 				}
 				return $this->$name;
 			
@@ -237,7 +237,7 @@ class Wp_Graphql_Extra_Options_Admin {
 
 			case '_exclude_mods':
 				if (! isset( $this->$name )) {
-					$this->$name = json_decode( get_option( $this->option_name . '_exclude_mods', '{}' ), true );
+					$this->$name = json_decode( get_option( $this->option_name . '_exclude_mods', '' ), true );
 				}
 				return $this->$name;
 
@@ -349,11 +349,13 @@ class Wp_Graphql_Extra_Options_Admin {
 		$settings = $this->_selected;
 		?>		
 			<textarea class="wpgeo-textarea" name="<?php echo $this->option_name . '_selected' ?>" id="<?php echo $this->option_name . '_selected' ?>"><?php
-				foreach( $settings as $key => $value ) {
-					$name = esc_textarea( $key );
-					$type = esc_textarea( $value[ 'type' ] );
-					$description = esc_textarea( $value[ 'description' ] );
-					echo "{$name}{$this->delimiter}{$type}{$this->delimiter}{$description}\r\n";
+				if( is_array( $settings ) ) {
+					foreach( $settings as $key => $value ) {
+						$name = esc_textarea( $key );
+						$type = esc_textarea( $value[ 'type' ] );
+						$description = esc_textarea( $value[ 'description' ] );
+						echo "{$name}{$this->delimiter}{$type}{$this->delimiter}{$description}\r\n";
+					}
 				}
 			?></textarea>
 			<br>
@@ -394,8 +396,10 @@ class Wp_Graphql_Extra_Options_Admin {
 		$exclude_mods = $this->_exclude_mods;
 		?>		
 			<textarea class="wpgeo-textarea" name="<?php echo $this->option_name . '_exclude_mods' ?>" id="<?php echo $this->option_name . '_exclude_mods' ?>"><?php
-				foreach( $exclude_mods as $mod ) {
-					echo esc_textarea( $mod ) . PHP_EOL;
+				if( is_array( $exclude_mods ) ) {
+					foreach( $exclude_mods as $mod ) {
+						echo esc_textarea( $mod ) . PHP_EOL;
+					}
 				}
 			?></textarea>
 			<br>

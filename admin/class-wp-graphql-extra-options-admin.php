@@ -317,7 +317,9 @@ class Wp_Graphql_Extra_Options_Admin {
 		/**
 		 * Build ThemeModQuery field with allowed theme modifications
 		 */
-		$fields[ 'themeMods' ] = ThemeModQuery::root_query( $allowed_mods );
+		if ( ! empty ( $allowed_mods ) ) {
+			$fields[ 'themeMods' ] = ThemeModQuery::root_query( $allowed_mods );
+		}
 		return $fields;
 	}
 

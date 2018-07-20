@@ -102,7 +102,7 @@ class Wp_Graphql_Extra_Options {
 		/**
 		 * Load WPGraphQL if not loaded
 		 */
-		include_once( PLUGINDIR . '/wp-graphql/vendor/autoload.php' );
+		include_once( get_home_path() . PLUGINDIR . '/wp-graphql/vendor/autoload.php' );
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the

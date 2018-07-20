@@ -237,7 +237,7 @@ class Wp_Graphql_Extra_Options_Admin {
 
 			case '_exclude_mods':
 				if (! isset( $this->$name )) {
-					$this->$name = json_decode( get_option( $this->option_name . '_selected', '{}' ), true );
+					$this->$name = json_decode( get_option( $this->option_name . '_exclude_mods', '{}' ), true );
 				}
 				return $this->$name;
 

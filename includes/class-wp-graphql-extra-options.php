@@ -100,6 +100,11 @@ class Wp_Graphql_Extra_Options {
 	private function load_dependencies() {
 
 		/**
+		 * Load WPGraphQL if not loaded
+		 */
+		include_once( PLUGINDIR . '/wp-graphql/vendor/autoload.php' );
+
+		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */

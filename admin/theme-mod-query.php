@@ -24,15 +24,11 @@ class ThemeModQuery {
 	 */
 	public static function root_query( $allowed_mods ) {
 
-		if ( ! empty( $allowed_mods ) ) {
-			return [
-				'type'        => Types::themeMod( '\\WPGraphQLExtra\\Type\\ThemeMod\\ThemeModType', $allowed_mods ),
-				'resolve'     => function () {
-					return true;
-				},
-			];
-		}
-
-		return self::$root_query;
+		return [
+			'type'        => Types::themeMod( '\\WPGraphQLExtra\\Type\\ThemeMod\\ThemeModType', $allowed_mods ),
+			'resolve'     => function () {
+				return true;
+			},
+		];
 	}
 }

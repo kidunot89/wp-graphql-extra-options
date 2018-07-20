@@ -312,6 +312,8 @@ class Wp_Graphql_Extra_Options_Admin {
 					$allowed_mods[] = $mod;
 				}
 			}
+		} else {
+			$allowed_mods = $all_mods;
 		}
 
 		/**

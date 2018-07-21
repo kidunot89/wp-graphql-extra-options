@@ -1,11 +1,11 @@
 # WPGraphQL Extra Options
-This plugin was made to be a helper to the WPGraphQL plugin. Its purpose is to expose more of Wordpress API in a primarily read-only fashion for React/GraphQL or Vue/GraphQL theme development. Currently, it allows for the loading of options/settings not loaded through the Settings API to be accessed through GraphQL request, adds a ThemeModType to the schema using the Theme API allows for filtering to provide more specific types and descriptions , but currently is only works with the **next** & **feature/callStatic-added-to-Types-class** branches of my fork of the **WPGraphQL** repo, 
+This plugin was made to be a helper to the WPGraphQL plugin. Its purpose is to expose more of Wordpress API in a primarily read-only fashion for React/GraphQL or Vue/GraphQL theme development. Currently, it can change of the WPGraphQL endpoint, the load options/settings not loaded through the Settings API to be accessed through GraphQL request, adds the ThemeModType to the schema using the Theme API allows for filtering to provide more specific types and descriptions , but currently is only works with the **next** & **feature/callStatic-added-to-Types-class** branches of my fork of the **WPGraphQL** repo, 
 
 ## Quick Install
 Clone repository or zipped master to wordpress plugin directory and activate.
 
 ## Usage 
-Upon activation navigate to "WPGraphQL Extra Options" under Settings.
+Upon activation navigate to "WPGraphQL Extra Options" under Settings. 
 
 ## Custom Options/Settings Usage 
 The plugin assumes the option can be retrieved through the `get_option` wordpress function.

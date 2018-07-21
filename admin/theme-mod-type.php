@@ -14,6 +14,7 @@ use WPGraphQL\Types;
  *
  * This sets up the theme modification type
  *
+ * @since 1.1.0
  * @package WPGraphQLExtra\Type
  */
 class ThemeModType extends WPObjectType {

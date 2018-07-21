@@ -53,7 +53,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	/**
 	 * The delimiter
 	 *
-	 * @since  	1.0.0
+	 * @since  	1.0.1
 	 * @access 	private
 	 * @var  	string 		$delimiter
 	 */
@@ -150,7 +150,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	/**
 	 * Register option page sections
 	 *
-	 * @since  1.0.0
+	 * @since  1.1.0
 	 */
 	public function register_setting() {
 
@@ -209,6 +209,11 @@ class Wp_Graphql_Extra_Options_Admin {
 
 	}
 
+	/**
+	 * Magic function
+	 * @since  				1.1.0
+	 * @return mixed 	class member
+	 */
 	public function __get( $name ) {
 		
 		switch( $name ) {
@@ -237,7 +242,7 @@ class Wp_Graphql_Extra_Options_Admin {
 
 	/**
 	 * Add selected settings to allSettings type schema
-	 *
+	 * @since  				1.1.0
 	 * @return array 	filtered args
 	 */
 	public function graphql_settings_fields( $fields ) {
@@ -292,7 +297,7 @@ class Wp_Graphql_Extra_Options_Admin {
 
 	/**
 	 * Modify theme_mods type schema acquired to _filter_mods field 
-	 *
+	 * @since  				1.1.0
 	 * @return array 	filtered $fields
 	 */
 	public function graphql_themeMods_fields( $fields ) {
@@ -372,8 +377,8 @@ class Wp_Graphql_Extra_Options_Admin {
 
 	/**
 	 * Add themeMods to root type schema
-	 *
-	 * @return array 	filtered args
+	 * @since  				1.1.0
+	 * @return array 	filtered fields
 	 */
 	public function graphql_root_queries($fields) {
 		if ( ! $this->_theme_mods ) {
@@ -397,7 +402,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	/**
 	 * Render the textarea field for selected option
 	 *
-	 * @since  1.0.0
+	 * @since  1.1.0
 	 */
 	public function wp_graphql_extra_options_selected_cb() {
 		$settings = $this->_selected;
@@ -444,7 +449,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	/**
 	 * Render exclude_mod textarea
 	 *
-	 * @since  1.0.1
+	 * @since  1.1.0
 	 */
 	public function wp_graphql_extra_options_filter_mods_cb() {
 		$filter_mods = $this->_filter_mods;
@@ -486,7 +491,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	 * Sanitize the selected value before being saved to database
 	 *
 	 * @param  string	$selected $_POST value
-	 * @since  				1.0.0
+	 * @since  				1.1.1
 	 * @return string Sanitized value
 	 */
 	public function wp_graphql_extra_options_sanitize_selected( $selected ) {
@@ -563,7 +568,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	 * Sanitize the _theme_mods value before being saved to database
 	 *
 	 * @param  string	$theme_mods $_POST value
-	 * @since  				1.0.1
+	 * @since  				1.1.0
 	 * @return string Sanitized value
 	 */
 	public function wp_graphql_extra_options_sanitize_theme_mods( $theme_mods ) {
@@ -577,7 +582,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	 * Sanitize the filter_mods value before being saved to database
 	 *
 	 * @param  string	$filter_mods $_POST value
-	 * @since  				1.0.0
+	 * @since  				1.1.1
 	 * @return string Sanitized value
 	 */
 	public function wp_graphql_extra_options_sanitize_filter_mods( $filter_mods ) {

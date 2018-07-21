@@ -38,7 +38,7 @@ class ThemeModType extends WPObjectType {
 	 *
 	 * @access public
 	 */
-	public function __construct( $allowed_mods ) {
+	public function __construct() {
     /**
 		 * Set the type_name
 		 *
@@ -48,7 +48,7 @@ class ThemeModType extends WPObjectType {
 
 		$config = [
 			'name'        => self::$type_name,
-			'fields'      => self::fields( $allowed_mods ),
+			'fields'      => self::fields(),
 			'description' => __( 'All of registered theme modifications', 'wp-graphql-extra-options' ),
 		];
 
@@ -64,20 +64,26 @@ class ThemeModType extends WPObjectType {
 	 * @access private
 	 * @return \GraphQL\Type\Definition\FieldDefinition|mixed|null
 	 */
-	private static function fields( $allowed_mods ) {
+	private static function fields() {
 
 		/**
 		 * Define $fields
 		 */
     $fields = [];
-    
-    if ( ! empty( $allowed_mods ) && is_array( $allowed_mods ) ) {
+		
+		/**
+		 * Get theme mods keys
+		 */
+		$theme_mods = array_keys ( get_theme_mods() );
+		
+
+    if ( ! empty( $theme_mods ) && is_array( $theme_mods ) ) {
 
 			/**
-			 * Loop through the $allowed_mods and build the setting with
+			 * Loop through the $theme_mods and build the setting with
 			 * proper fields
 			 */
-      foreach( $allowed_mods as $mod ) {
+      foreach( $theme_mods as $mod ) {
 
         $field_key = lcfirst( str_replace( '_', '', ucwords( $mod, '_' ) ) );
 
@@ -101,7 +107,7 @@ class ThemeModType extends WPObjectType {
 							
 							}
 							return $theme_mod;
-							
+
             },
           ];
 

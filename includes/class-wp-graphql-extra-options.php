@@ -173,6 +173,7 @@ class Wp_Graphql_Extra_Options {
 		
 		// Enable selected setting for WPGraphQL
 		$this->loader->add_filter( 'graphql_settings_fields', $plugin_admin, 'graphql_settings_fields', 10 );
+		$this->loader->add_filter( 'graphql_theme_mods_fields', $plugin_admin, 'graphql_theme_mods_fields', 10 );
 
 		// Enable theme modifications for WPGraphQL
 		$this->loader->add_filter( 'graphql_root_queries', $plugin_admin, 'graphql_root_queries', 10 );

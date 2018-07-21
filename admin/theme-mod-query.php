@@ -22,10 +22,10 @@ class ThemeModQuery {
 	 *
 	 * @return array $root_query
 	 */
-	public static function root_query( $allowed_mods ) {
+	public static function root_query() {
 
 		return [
-			'type'        => Types::themeMod( '\\WPGraphQLExtra\\Type\\ThemeMod\\ThemeModType', $allowed_mods ),
+			'type'        => Types::themeMod( '\\WPGraphQLExtra\\Type\\ThemeMod\\ThemeModType' ),
 			'resolve'     => function () {
 				return true;
 			},

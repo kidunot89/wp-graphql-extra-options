@@ -181,12 +181,12 @@ class Wp_Graphql_Extra_Options_Admin {
 		);
 
 		add_settings_field(
-			$this->option_name . '_exclude_mods',
-			__( 'Exclude Theme Mods', 'wp-graphql-extra-options' ),
-			array( $this, $this->option_name . '_exclude_mods_cb' ),
+			$this->option_name . '_filter_mods',
+			__( 'Filter Theme Mods', 'wp-graphql-extra-options' ),
+			array( $this, $this->option_name . '_filter_mods_cb' ),
 			$this->plugin_name,
 			$this->option_name . '_general',
-			array( 'label_for' => $this->option_name . '_exclude_mods' )
+			array( 'label_for' => $this->option_name . '_filter_mods' )
 		);
 
 		register_setting(
@@ -203,8 +203,8 @@ class Wp_Graphql_Extra_Options_Admin {
 
 		register_setting(
 			$this->plugin_name,
-			$this->option_name . '_exclude_mods',
-			array( $this, $this->option_name . '_sanitize_exclude_mods' )
+			$this->option_name . '_filter_mods',
+			array( $this, $this->option_name . '_sanitize_filter_mods' )
 		);
 
 	}
@@ -225,9 +225,9 @@ class Wp_Graphql_Extra_Options_Admin {
 				}
 				return $this->$name;
 
-			case '_exclude_mods':
+			case '_filter_mods':
 				if (! isset( $this->$name )) {
-					$this->$name = json_decode( get_option( $this->option_name . '_exclude_mods', '' ), true );
+					$this->$name = json_decode( get_option( $this->option_name . '_filter_mods', '' ), true );
 				}
 				return $this->$name;
 
@@ -290,6 +290,80 @@ class Wp_Graphql_Extra_Options_Admin {
 	}
 
 	/**
+	 * Modify theme_mods type schema acquired to _filter_mods field 
+	 *
+	 * @return array 	filtered $fields
+	 */
+	public function graphql_theme_mods_fields( $fields ) {
+		if ( ! $this->_theme_mods ) {
+			return $fields;
+		}
+		
+		/**
+		 * get allowed theme_mods
+		 */
+		$filter_mods = $this->_filter_mods;
+		foreach( $filter_mods as $key => $value ) {
+			/**
+			 * Set new modifications to field with custom definition and remove excluded ones
+			 */
+			$name = esc_textarea( $key );
+			if ( is_array( $value ) && ! empty( $fields [ $name ] ) ) {
+
+
+				if ( ! empty( $value[ 'type' ] ) ) {
+					$type = esc_textarea( $value[ 'type' ] );
+					$fields[ $name ][ 'type' ] = \WPGraphQL\Types::get_type( $type );
+				}
+
+				if ( ! empty( $value[ 'description' ] ) ) {
+					$fields[ $name ][ 'description' ] = esc_textarea( $value[ 'description' ] );
+				}
+
+				$fields[ $name ][ 'resolve' ] = function() use( $name, $type ) {
+
+					/**
+					 * Retrieve theme modification.
+					 */
+					$mod = get_theme_mod( $name, 'none' );
+
+					/**
+					 * Case to specified type
+					 */
+					if ( ! is_array( $mod ) ) {
+						switch( $type ) {
+							
+							case 'integer':
+								$mod = absint( $mod );
+								break;
+							case 'boolean':
+								$mod = (boolean) $mod;
+								break;
+							case 'number':
+								$mod = (float) $mod;
+								break;
+
+						}
+					} else {
+					
+						$mod = json_encode( $mod );
+					}
+					return $mod;
+				};
+				
+
+			} elseif ( ! empty( $fields[ $name ] ) ) {
+
+				unset( $fields[ $name ] );
+
+			}
+
+		}
+
+		return fields;
+	}
+
+	/**
 	 * Add themeMods to root type schema
 	 *
 	 * @return array 	filtered args
@@ -298,30 +372,9 @@ class Wp_Graphql_Extra_Options_Admin {
 		if ( ! $this->_theme_mods ) {
 			return $fields;
 		}
+
+		$fields[ 'themeMods' ] = ThemeModQuery::root_query();
 		
-		/**
-		 * get allowed theme_mods
-		 */
-		$exclude_mods = $this->_exclude_mods;
-		$all_mods = array_keys ( get_theme_mods() );
-
-		$allowed_mods = [];
-		if ( ! empty ( $exclude_mods ) ) {
-			foreach ($all_mods as $mod ) {
-				if ( ! in_array( $mod, $exclude_mods ) ) {
-					$allowed_mods[] = $mod;
-				}
-			}
-		} else {
-			$allowed_mods = $all_mods;
-		}
-
-		/**
-		 * Build ThemeModQuery field with allowed theme modifications
-		 */
-		if ( ! empty ( $allowed_mods ) ) {
-			$fields[ 'themeMods' ] = ThemeModQuery::root_query( $allowed_mods );
-		}
 		return $fields;
 	}
 
@@ -386,19 +439,38 @@ class Wp_Graphql_Extra_Options_Admin {
 	 *
 	 * @since  1.0.1
 	 */
-	public function wp_graphql_extra_options_exclude_mods_cb() {
-		$exclude_mods = $this->_exclude_mods;
+	public function wp_graphql_extra_options_filter_mods_cb() {
+		$filter_mods = $this->_filter_mods;
 		?>		
-			<textarea class="wpgeo-textarea" name="<?php echo $this->option_name . '_exclude_mods' ?>" id="<?php echo $this->option_name . '_exclude_mods' ?>"><?php
-				if( is_array( $exclude_mods ) ) {
-					foreach( $exclude_mods as $mod ) {
-						echo esc_textarea( $mod ) . PHP_EOL;
+			<textarea class="wpgeo-textarea" name="<?php echo $this->option_name . '_filter_mods' ?>" id="<?php echo $this->option_name . '_filter_mods' ?>"><?php
+				if( is_array( $filter_mods ) ) {
+					foreach( $filter_mods as $name => $value ) {
+
+						if ( false === $value ) {
+							
+							echo '!' . esc_textarea( $name ) . PHP_EOL;
+
+						} elseif ( is_array( $value ) ) {
+							
+							$name = esc_textarea( $name );
+							$type = esc_textarea( $value[ 'type' ] );
+							$description = esc_textarea( $value[ 'description' ] );
+							echo "{$name}{$this->delimiter}{$type}{$this->delimiter}{$description}" . PHP_EOL;
+						
+						}
+
 					}
 				}
 			?></textarea>
 			<br>
 			<span class="description">
-				<?php echo _e( 'Enter theme_mod name to be excluded, separate by new line.' ) ?>
+				<?php echo "Modify ThemeModType schema with simpleExclude a mod a simple script" ?>
+				<br />
+				<?php echo "Exclude a mod: \"!mod_name\"" ?>
+				<br />
+				<?php echo "Redefine mod: \"mod_name{$this->delimiter}type{$this->delimiter}description\"" ?>
+				<br />
+				<?php echo 'The current valid types are "integer, "boolean", "number", "string"' ?>
 			</span>
 		<?php
 	}
@@ -493,46 +565,71 @@ class Wp_Graphql_Extra_Options_Admin {
 	}
 
 	/**
-	 * Sanitize the exclude_mods value before being saved to database
+	 * Sanitize the filter_mods value before being saved to database
 	 *
-	 * @param  string	$exclude_mods $_POST value
+	 * @param  string	$filter_mods $_POST value
 	 * @since  				1.0.0
 	 * @return string Sanitized value
 	 */
-	public function wp_graphql_extra_options_sanitize_exclude_mods( $exclude_mods ) {
+	public function wp_graphql_extra_options_sanitize_filter_mods( $filter_mods ) {
 
-		$mods = explode( PHP_EOL, $exclude_mods);
-
-		/**
-		 * Get all registered settings
-		 */
-		$all_mods = array_keys( get_theme_mods() );
-		
-		/**
-		 * Validate user input
-		 */
-		$valid = array();
-		foreach( $mods as $mod) {
-			// Skip non-existing
-			if ( ! in_array( $mod, $all_mods, true ) || in_array( sanitize_text_field( $mod ), $valid ) ) {
-				// TODO: and error output for invalid entries
+		$entries = explode( PHP_EOL, $filter_mods);
+		$filter_array = [];
+		foreach( $entries as $entry ) {
+			
+			if ( '!' === $entry->charAt(0) ) {
+				$filter_array[ ltrim ( $entry, '!' ) ] === false;
 				continue;
 			}
 
-			$valid[] = sanitize_text_field( $mod );
+			/**
+			 * Validate and sanitize line
+			 */
+			$parts = explode( $this->delimiter, $entry );
+			
+			/**
+			 * Confirm part count and name or skip
+			 */
+			$length = count ( $parts );
+			if ( $length < 2 || $length > 3 ) {
+				// TODO - throw invalid number of arguments error
+				continue;
+			}
+
+			if ( false === $parts[0] || in_array( $parts[0], $settings ) ) {
+				// TODO - throw invalid setting name error
+				continue;
+			}
+
+			/**
+			 * Sanitize input and build filter
+			 */
+			$name = sanitize_text_field( $parts[0] );
+			$filter_array[ $name ] = [];
+	
+			if ( false === $parts[1] ) {
+				// TODO - throw invalid setting type error
+				continue;
+			}
+			$filter_array[ $name ][ 'type' ] = sanitize_text_field( $parts[1] );
+
+			if ( false !== $parts[2] ) {
+				$filter_array[ $name ][ 'description' ] = sanitize_text_field( $parts[2] );
+			}
+
 		}
 
-		if ( ! empty( $valid )) {
+		if ( ! empty( $filter_array )) {
 
-			$exclude_mods = json_encode( $valid );
+			$filter_mods = json_encode( $filter_array );
 		
 		}	else {
 			
-			$exclude_mods = '';
+			$filter_mods = '';
 
 		}
 		
-		return $exclude_mods;
+		return $filter_mods;
 
 	}
 

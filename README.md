@@ -1,5 +1,5 @@
 # WPGraphQL Extra Options
-This plugin was made to be a helper to the WPGraphQL plugin. Its purpose is to expose more of Wordpress API in a primarily read-only fashion for React/GraphQL or Vue/GraphQL theme development. Currently, it allows for the loading of options/settings not loaded through the Settings API to be accessed through GraphQL request, adds a ThemeMod Type to the schema, but currently is only works with the **next** & **feature/callStatic-added-to-Types-class** branches of my fork of the **WPGraphQL** repo, 
+This plugin was made to be a helper to the WPGraphQL plugin. Its purpose is to expose more of Wordpress API in a primarily read-only fashion for React/GraphQL or Vue/GraphQL theme development. Currently, it allows for the loading of options/settings not loaded through the Settings API to be accessed through GraphQL request, adds a ThemeModType to the schema using the Theme API allows for filtering to provide more specific types and descriptions , but currently is only works with the **next** & **feature/callStatic-added-to-Types-class** branches of my fork of the **WPGraphQL** repo, 
 
 ## Quick Install
 Clone repository or zipped master to wordpress plugin directory and activate.
@@ -31,21 +31,28 @@ All selected settings will appear under the `allSettings` type in camelCase.
 ```
 
 ## ThemeMods Usage
-Theme have to loaded in by currently selected theme otherwise they aren't loaded to the schema.
+Similar to Options/Settings filters are separate by new lines.
+
+To exclude: `!mod_name`
+
+To redefine: `mod_name<->type<->description`
+
+Valid types are `integer`, `boolean`, `number`, and `string`. To specific a `description` you must enter a `type`, although `description` is optional. The default type is `string` if the expect output an array it will be json_encoded.
 
 ## ThemeMods Exclude Example
 
 ```
-nav_menu_locations
+!nav_menu_locations
+custom_logo<->integer<->ID of site custom logo media item
 ```
 
 ## GraphQL Request Example
-All loaded theme_mods are location under `themeMods` in camelCase. They are also all returned as strings due to the natural of the get_theme_mods function. The function by default seems to return `string`, `string[]`, `null` or whatever is set to the default value. That being the case the query results with return either a `string` or a json encoded `string` for `string[]`.
+All loaded theme_mods are location under `themeMods` in camelCase.
 
 ```
 {
   themeMods {
-    navMenuLocations
+    customLogo
   }
 }
 ```
@@ -58,5 +65,5 @@ All loaded theme_mods are location under `themeMods` in camelCase. They are also
 3. Polish up user controls.
 
 ### ThemeMods
-1. Add custom variable type functionality to schema implementation.
+1. More flexibility in Filter Mod.
 2. Add mutations

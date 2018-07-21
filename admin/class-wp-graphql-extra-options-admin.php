@@ -577,7 +577,7 @@ class Wp_Graphql_Extra_Options_Admin {
 		$filter_array = [];
 		foreach( $entries as $entry ) {
 			
-			if ( '!' === $entry->charAt(0) ) {
+			if ( '!' === $entry[0] ) {
 				$filter_array[ ltrim ( $entry, '!' ) ] === false;
 				continue;
 			}

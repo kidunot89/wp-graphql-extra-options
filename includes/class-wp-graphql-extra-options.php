@@ -170,6 +170,9 @@ class Wp_Graphql_Extra_Options {
 		// Options Page
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_setting' );
+
+		// Filter WPGraphQL endpoint
+		$this->loader->add_filter( 'graphql_endpoint', $plugin_admin, 'graphql_endpoint' );
 		
 		// Enable selected setting for WPGraphQL
 		$this->loader->add_filter( 'graphql_settings_fields', $plugin_admin, 'graphql_settings_fields', 10 );

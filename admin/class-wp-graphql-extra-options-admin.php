@@ -603,7 +603,7 @@ class Wp_Graphql_Extra_Options_Admin {
 				continue;
 			}
 
-			if ( false === $parts[0] || in_array( $parts[0], $settings ) ) {
+			if ( false === $parts[0] || in_array( $parts[0], $entry ) ) {
 				// TODO - throw invalid setting name error
 				continue;
 			}

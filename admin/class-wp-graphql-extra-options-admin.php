@@ -307,7 +307,7 @@ class Wp_Graphql_Extra_Options_Admin {
 			/**
 			 * Set new modifications to field with custom definition and remove excluded ones
 			 */
-			$name = esc_textarea( $key );
+			$name = lcfirst( str_replace( '_', '', ucwords( esc_textarea( $key ), '_' ) ) );
 			if ( is_array( $value ) && ! empty( $fields [ $name ] ) ) {
 
 

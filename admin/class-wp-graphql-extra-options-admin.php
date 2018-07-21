@@ -243,6 +243,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	public function graphql_settings_fields( $fields ) {
 
 		$settings = $this->_selected;
+		if ( ! is_array( $settings ) ) return $fields;
 
 		$field_keys = array_keys( $fields );
 		foreach( $settings as $key => $value ) {
@@ -294,19 +295,21 @@ class Wp_Graphql_Extra_Options_Admin {
 	 *
 	 * @return array 	filtered $fields
 	 */
-	public function graphql_theme_mods_fields( $fields ) {
-		if ( ! $this->_theme_mods ) {
-			return $fields;
-		}
-		
+	public function graphql_themeMods_fields( $fields ) {
+		if ( ! $this->_theme_mods ) return $fields;
+
 		/**
-		 * get allowed theme_mods
+		 * Validate _filter_mods
 		 */
 		$filter_mods = $this->_filter_mods;
+		if ( ! is_array( $filter_mods ) ) return $fields;
+
+		/**
+		 * Setup fields according to data in _filter_mods
+		 */
 		foreach( $filter_mods as $key => $value ) {
-			/**
-			 * Set new modifications to field with custom definition and remove excluded ones
-			 */
+	
+			// camelcase $key for $field name
 			$name = lcfirst( str_replace( '_', '', ucwords( esc_textarea( $key ), '_' ) ) );
 			if ( is_array( $value ) && ! empty( $fields [ $name ] ) ) {
 
@@ -320,12 +323,16 @@ class Wp_Graphql_Extra_Options_Admin {
 					$fields[ $name ][ 'description' ] = esc_textarea( $value[ 'description' ] );
 				}
 
-				$fields[ $name ][ 'resolve' ] = function() use( $name, $type ) {
+				/**
+				 * Resolve function for redefined field. Returns string or json-encoded string. 
+				 * Not very robust at the moment.
+				 */
+				$fields[ $name ][ 'resolve' ] = function() use( $key, $type ) {
 
 					/**
 					 * Retrieve theme modification.
 					 */
-					$mod = get_theme_mod( $name, 'none' );
+					$mod = get_theme_mod( $key, 'none' );
 
 					/**
 					 * Case to specified type
@@ -345,7 +352,7 @@ class Wp_Graphql_Extra_Options_Admin {
 
 						}
 					} else {
-					
+						// Encode array.
 						$mod = json_encode( $mod );
 					}
 					return $mod;
@@ -360,7 +367,7 @@ class Wp_Graphql_Extra_Options_Admin {
 
 		}
 
-		return fields;
+		return $fields;
 	}
 
 	/**

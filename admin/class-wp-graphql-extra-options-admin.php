@@ -491,6 +491,8 @@ class Wp_Graphql_Extra_Options_Admin {
 	 */
 	public function wp_graphql_extra_options_sanitize_selected( $selected ) {
 
+		if ( false === $selected ) return $selected;
+
 		$lines = explode( PHP_EOL, $selected);
 		$settings = array();
 		foreach( $lines as $line ) {
@@ -579,6 +581,8 @@ class Wp_Graphql_Extra_Options_Admin {
 	 * @return string Sanitized value
 	 */
 	public function wp_graphql_extra_options_sanitize_filter_mods( $filter_mods ) {
+
+		if ( false === $filter_mods ) return $filter_mods;
 
 		$entries = explode( PHP_EOL, $filter_mods);
 		$filter_array = [];

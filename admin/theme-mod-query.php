@@ -9,6 +9,7 @@ use WPGraphQL\Types;
 /**
  * Class ThemeModQuery
  *
+ * @since 1.1.0
  * @package WPGraphQL\Type\ThemeMod
  */
 class ThemeModQuery {

@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://axistaylor.com
- * @since             1.0.0
+ * @since             0.0.1
  * @package           Wp_Graphql_Extra_Options
  *
  * @wordpress-plugin
  * Plugin Name:       WP GraphQL Extra Options
  * Plugin URI:        https://github.com/kidunot89/wp-graphql-extra-options
  * Description:       Allow addition of wordpress options that don't use the Settings API
- * Version:           1.0.0
+ * Version:           0.2.1
  * Author:            Geoff Taylor
  * Author URI:        https://axistaylor.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.0.0' );
+define( 'PLUGIN_NAME_VERSION', '0.2.1' );
 
 /**
  * The code that runs during plugin activation.
@@ -71,7 +71,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-graphql-extra-options.p
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    1.0.0
+ * @since    0.0.1
  */
 function run_wp_graphql_extra_options() {
 

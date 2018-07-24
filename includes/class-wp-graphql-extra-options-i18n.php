@@ -7,7 +7,7 @@
  * so that it is ready for translation.
  *
  * @link       https://axistaylor.com
- * @since      1.0.0
+ * @since      0.0.1
  *
  * @package    Wp_Graphql_Extra_Options
  * @subpackage Wp_Graphql_Extra_Options/includes
@@ -19,7 +19,7 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @since      1.0.0
+ * @since      0.0.1
  * @package    Wp_Graphql_Extra_Options
  * @subpackage Wp_Graphql_Extra_Options/includes
  * @author     Geoff Taylor <geoffrey.taylor@outlook.com>
@@ -30,7 +30,7 @@ class Wp_Graphql_Extra_Options_i18n {
 	/**
 	 * Load the plugin text domain for translation.
 	 *
-	 * @since    1.0.0
+	 * @since    0.0.1
 	 */
 	public function load_plugin_textdomain() {
 

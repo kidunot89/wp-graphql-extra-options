@@ -4,7 +4,7 @@
  * Fired during plugin activation
  *
  * @link       https://axistaylor.com
- * @since      1.0.0
+ * @since      0.0.1
  *
  * @package    Wp_Graphql_Extra_Options
  * @subpackage Wp_Graphql_Extra_Options/includes
@@ -15,7 +15,7 @@
  *
  * This class defines all code necessary to run during the plugin's activation.
  *
- * @since      1.0.0
+ * @since      0.0.1
  * @package    Wp_Graphql_Extra_Options
  * @subpackage Wp_Graphql_Extra_Options/includes
  * @author     Geoff Taylor <geoffrey.taylor@outlook.com>
@@ -23,14 +23,15 @@
 class Wp_Graphql_Extra_Options_Activator {
 
 	/**
-	 * Short Description. (use period)
+	 * Function to execute when the user activates the plugin.
 	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
+	 * @since    0.1.1
 	 */
 	public static function activate() {
-
+		flush_rewrite_rules();
+		// Save the version of the plugin as an option in order to force actions
+		// on upgrade.
+		update_option( 'wp_graphql_eo_version', PLUGIN_NAME_VERSION, 'no' );
 	}
 
 }

@@ -163,6 +163,15 @@ class Wp_Graphql_Extra_Options_Admin {
 		);
 
 		add_settings_field(
+			$this->option_name . '_endpoint',
+			__( 'WPGraphQL Endpoint', 'wp-graphql-extra-options' ),
+			array( $this, $this->option_name . '_endpoint_cb' ),
+			$this->plugin_name,
+			$this->option_name . '_general',
+			array( 'label_for' => $this->option_name . '_endpoint' )
+		);
+
+		add_settings_field(
 			$this->option_name . '_selected',
 			__( 'Selected Settings', 'wp-graphql-extra-options' ),
 			array( $this, $this->option_name . '_selected_cb' ),
@@ -187,6 +196,12 @@ class Wp_Graphql_Extra_Options_Admin {
 			$this->plugin_name,
 			$this->option_name . '_general',
 			array( 'label_for' => $this->option_name . '_filter_mods' )
+		);
+
+		register_setting(
+			$this->plugin_name,
+			$this->option_name . '_endpoint',
+			array( $this, $this->option_name . '_sanitize_endpoint' )
 		);
 
 		register_setting(
@@ -216,27 +231,40 @@ class Wp_Graphql_Extra_Options_Admin {
 	 */
 	public function __get( $name ) {
 		
-		switch( $name ) {
+		if (! isset( $this->$name )) {
+			switch( $name ) {
 
-			case '_selected':
-				if (! isset( $this->$name )) {
-					$this->$name = json_decode( get_option( $this->option_name . '_selected', '' ), true );
-				}
-				return $this->$name;
-			
-			case '_theme_mods':
-				if (! isset( $this->$name )) {
+				case '_selected':
+				case '_filter_mods':
+					$this->$name = json_decode( get_option( $this->option_name . $name, '' ), true );
+					break;
+
+				case '_endpoint':
+					$this->$name = get_option( $this->option_name . $name, '' );
+					$this->$name !== '' ?: $this->$name = 'graphql'; 
+					break;
+				
+				default:
 					$this->$name = get_option( $this->option_name . $name, false );
-				}
-				return $this->$name;
+					break;
 
-			case '_filter_mods':
-				if (! isset( $this->$name )) {
-					$this->$name = json_decode( get_option( $this->option_name . '_filter_mods', '' ), true );
-				}
-				return $this->$name;
-
+			}
 		}
+
+		return $this->$name;
+
+	}
+
+	/**
+	 * Changes graphql endpoint
+	 * @since  				1.2.0
+	 * @return array 	filtered route
+	 */
+	public function graphql_endpoint( $route ) {
+		
+		$endpoint = esc_textarea( $this->_endpoint );
+		if ( false === $endpoint ) return $route;
+		return $endpoint;
 
 	}
 
@@ -400,6 +428,25 @@ class Wp_Graphql_Extra_Options_Admin {
 	}
 
 	/**
+	 * Render text field for _endpoint field
+	 *
+	 * @since  1.2.0
+	 */
+	public function wp_graphql_extra_options_endpoint_cb() {
+		$endpoint = $this->_endpoint;
+		$siteurl = get_option( 'siteurl', false );
+
+		if ( $siteurl ) echo $siteurl . '/';
+		?>		
+			<input type="text" placeholder="<?php echo esc_textarea( $endpoint ) ?>" value="<?php echo esc_textarea( $endpoint ) ?>"name="<?php echo $this->option_name . '_endpoint' ?>" id="<?php echo $this->option_name . '_endpoint' ?>" />
+			<br>
+			<span class="description">
+				<?php _e( 'Change graphql endpoint', 'wp-graphql-extra-options' ) ?>
+			</span>
+		<?php
+	}
+
+	/**
 	 * Render the textarea field for selected option
 	 *
 	 * @since  0.1.0
@@ -447,7 +494,7 @@ class Wp_Graphql_Extra_Options_Admin {
 	}
 
 	/**
-	 * Render exclude_mod textarea
+	 * Render _filter_mods textarea
 	 *
 	 * @since  0.1.0
 	 */
@@ -485,6 +532,19 @@ class Wp_Graphql_Extra_Options_Admin {
 				<?php echo 'The current valid types are "integer, "boolean", "number", "string"' ?>
 			</span>
 		<?php
+	}
+
+	/**
+	 * Sanitize the _endpoint value before being saved to database
+	 *
+	 * @param  string	$endpoint $_POST value
+	 * @since  				1.2.0
+	 * @return string Sanitized value
+	 */
+	public function wp_graphql_extra_options_sanitize_endpoint( $endpoint ) {
+
+		return sanitize_text_field( $endpoint );
+
 	}
 
 	/**

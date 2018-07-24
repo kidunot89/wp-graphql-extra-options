@@ -35,7 +35,16 @@ class ThemeModType extends WPObjectType {
 	private static $fields;
 
 	/**
-	 * SettingsType constructor.
+	 * Holds the ThemeModSubType fully qualified classname
+	 *
+	 * @since 0.3.0
+	 * @var array $fields
+	 * @access private
+	 */
+	private static $sub_type_class = '\\WPGraphQLExtra\\Type\\ThemeMod\\ThemeModSubType';
+
+	/**
+	 * ThemeModType constructor.
 	 *
 	 * @access public
 	 */
@@ -86,7 +95,8 @@ class ThemeModType extends WPObjectType {
 			 */
       foreach( $theme_mods as $mod ) {
 
-        $field_key = lcfirst( str_replace( '_', '', ucwords( $mod, '_' ) ) );
+				$type_name = str_replace( '_', '', ucwords( $mod, '_' ) );
+        $field_key = lcfirst( $type_name );
 
 				if ( ! empty( $mod ) && ! empty( $field_key ) ) {
 
@@ -94,23 +104,61 @@ class ThemeModType extends WPObjectType {
 					 * Dynamically build the individual setting and it's fields
 					 * then add it to $fields
 					 */
-					$fields[ $field_key ] = [
-						'type'        => Types::get_type( 'string' ),
-            'resolve'     => function( $root, $args, AppContext $context, ResolveInfo $info ) use( $mod ) {
-							
-							/**
-               * Retrieve theme modification.
-               */
-							$theme_mod = get_theme_mod( $mod, 'none' );
-							if ( is_array( $theme_mod ) ) {
-							
-								$theme_mod = json_encode( $theme_mod );
-							
-							}
-							return $theme_mod;
+					switch( $mod ) {
+						
+						case 'nav_menu_locations':
+							$fields[ $field_key ] = [ 
+								'type' 				=> Types::list_of( Types::$type_name( self::$sub_type_class, $type_name ) ),
+								'description'	=> __( 'theme menu locations', 'wp-graphql-extra-options' ),
+								'resolve'			=> function( $root, $args, AppContext $context, ResolveInfo $info ) use( $mod ) {
+									/**
+									 * Retrieve theme modification.
+									 */
+									$theme_mod = get_theme_mod( $mod, 'none' );
+									if( is_array( $theme_mod ) ) {
+										$menu_locations = [];
+										foreach( $theme_mod as $location_name => $menu_id ) {
+											$menu_locations[] = [ 
+												'location_name' => $location_name,
+												'menu_id'				=> $menu_id,
+											];
+										}
+									}
+									
+									return $menu_locations;
+								}
+							];
+							break;
 
-            },
-          ];
+						case 'custom_logo':
+							$fields[ $field_key ] = [ 
+								'type' 				=> Types::post_object( 'attachment' ),
+								'description'	=> __( 'custom theme logo', 'wp-graphql-extra-options' ),
+								'resolve'			=> function( $root, $args, AppContext $context, ResolveInfo $info ) use( $mod ) {
+									/**
+									 * Retrieve theme modification.
+									 */
+									$id = get_theme_mod( $mod, 'none' );
+									return ( ! empty( $id ) ) ? Datasource::resolve_post_object( intval( $id ), 'attachment' ) : null;
+								}
+							];
+							break;
+
+						default:
+							$fields[ $field_key ] = [ 'type' => Types::get_type( 'string' ) ];
+							
+					}
+					
+					$fields[ $field_key ] += [ 'resolve' => function( $root, $args, AppContext $context, ResolveInfo $info ) use( $mod ) {
+									
+						/**
+						 * Retrieve theme modification.
+						 */
+						$theme_mod = get_theme_mod( $mod, 'none' );
+						
+						return $theme_mod;
+
+					}];
 
         }
 

@@ -3,6 +3,7 @@
 namespace WPGraphQLExtra\Type\ThemeMod;
 
 require_once 'theme-mod-type.php';
+require_once 'theme-mod-sub-type.php';
 
 use WPGraphQL\Types;
 
@@ -19,7 +20,6 @@ class ThemeModQuery {
 	 * for ThemeMod
 	 *
 	 * @access public
-	 * @param array $allowed_mods
 	 *
 	 * @return array $root_query
 	 */

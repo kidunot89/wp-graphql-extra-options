@@ -25,13 +25,13 @@ class Wp_Graphql_Extra_Options_Activator {
 	/**
 	 * Function to execute when the user activates the plugin.
 	 *
-	 * @since    0.1.1
+	 * @since    0.4.0
 	 */
 	public static function activate() {
 		flush_rewrite_rules();
 		// Save the version of the plugin as an option in order to force actions
 		// on upgrade.
-		update_option( 'wp_graphql_eo_version', PLUGIN_NAME_VERSION, 'no' );
+		update_option( 'wp_graphql_eo_version', WPGRAPHQL_EXTRA_VERSION, 'no' );
 	}
 
 }

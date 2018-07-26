@@ -49,11 +49,7 @@ class ThemeModType extends WPObjectType {
 	 * @access public
 	 */
 	public function __construct() {
-    /**
-		 * Set the type_name
-		 *
-		 * @since 0.0.1
-		 */
+		
 		self::$type_name = 'ThemeMods';
 
 		$config = [
@@ -108,24 +104,24 @@ class ThemeModType extends WPObjectType {
 						
 						case 'nav_menu_locations':
 							$fields[ $field_key ] = [ 
-								'type' 				=> Types::list_of( Types::$type_name( self::$sub_type_class, $type_name ) ),
+								'type' 				=> Types::menu(),
 								'description'	=> __( 'theme menu locations', 'wp-graphql-extra-options' ),
+								'args'				=> [
+									'location' => [
+										'type'	=> Types::string(),
+										'description' => __( 'theme menu location name', 'wp-graphql-extra-options' )
+									],
+								],
 								'resolve'			=> function( $root, $args, AppContext $context, ResolveInfo $info ) use( $mod ) {
 									/**
-									 * Retrieve theme modification.
+									 * Retrieve menu
 									 */
-									$theme_mod = get_theme_mod( $mod, 'none' );
-									if( is_array( $theme_mod ) ) {
-										$menu_locations = [];
-										foreach( $theme_mod as $location_name => $menu_id ) {
-											$menu_locations[] = [ 
-												'location_name' => $location_name,
-												'menu_id'				=> $menu_id,
-											];
+									if ( ! empty( $args[ 'location' ] ) ) {
+										if ( ! empty( $root[ $args[ 'location' ] ] ) ) {
+											return DataSource::resolve_term_object( $root[ $args[ 'location' ] ], 'nav_menu' );
 										}
 									}
-									
-									return $menu_locations;
+									return null;
 								}
 							];
 							break;
@@ -136,7 +132,7 @@ class ThemeModType extends WPObjectType {
 								'description'	=> __( 'custom theme logo', 'wp-graphql-extra-options' ),
 								'resolve'			=> function( $root, $args, AppContext $context, ResolveInfo $info ) use( $mod ) {
 									/**
-									 * Retrieve theme modification.
+									 * Retrieve attachment.
 									 */
 									$id = get_theme_mod( $mod, 'none' );
 									return ( ! empty( $id ) ) ? Datasource::resolve_post_object( intval( $id ), 'attachment' ) : null;

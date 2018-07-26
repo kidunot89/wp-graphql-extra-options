@@ -74,41 +74,10 @@ class ThemeModSubType extends WPObjectType {
      */
     switch( $type_name ) {
       
-      case 'NavMenuLocations':
-        return self::nav_menu_location();
       default:
         return null;
 
     }
-
-  }
-
-  /**
-   * This defines the fields for the NavMenuLocation sub type
-   *
-   * @return array  \GraphQL\Type\Definition\FieldDefinition|mixed|null
-   */
-  private static function nav_menu_location() {
-    
-    return [
-      'name' => [
-        'type'        => Types::string(),
-        'description' => __( 'name of menu location', 'wp-graphql-extra-options' ),
-        'resolve'     => function ( $root, $args, AppContext $context, ResolveInfo $info ) {
-          return ( ! empty( $root[ 'location_name' ] ) ) ? $root[ 'location_name' ] : null;
-        }
-      ],
-      'menu' => [
-        'type'        => Types::menu(),
-        'description' => __( 'menu set to menu location', 'wp-graphql-extra-options' ),
-        'resolve'     => function ( $root, $args, AppContext $context, ResolveInfo $info ) {
-          if ( ! empty( $root[ 'menu_id' ] ) ) {
-            return DataSource::resolve_term_object( $root[ 'menu_id' ], 'nav_menu' );
-          }
-          return null;
-        }
-      ]
-    ];
 
   }
 

@@ -53,12 +53,31 @@ custom_logo<->integer<->ID of site custom logo media item
 ```
 
 ### GraphQL Request Example
-All loaded theme_mods are location under `themeMods` in camelCase.
+All loaded theme_mods are location under `themeMods` in camelCase. Also a couple have default definitions that probably better off untouched
 
 ```
 {
   themeMods {
     customLogo
+  }
+}
+```
+
+### Defaults Query
+
+```
+{
+  themeMod {
+    navMenuLocations(location: "location") {
+      menuId
+      menuItems{
+        label
+        url
+      }
+    }
+    customLogo{
+      sourceUrl
+    }
   }
 }
 ```

@@ -67,15 +67,20 @@ All loaded theme_mods are location under `themeMods` in camelCase. Also a couple
 
 ```
 {
-  themeMod {
-    navMenuLocations(location: "location") {
+  themeMods {
+    navMenuLocations(location: "location-name") {
       menuId
-      menuItems{
-        label
-        url
+      name
+      menuItems {
+        nodes {
+          id
+          url
+          label
+          target
+        }
       }
     }
-    customLogo{
+    customLogo {
       sourceUrl
     }
   }

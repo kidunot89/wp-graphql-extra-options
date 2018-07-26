@@ -81,7 +81,6 @@ class ThemeModType extends WPObjectType {
 		 * Get theme mods keys
 		 */
 		$theme_mods = array_keys ( get_theme_mods() );
-		
 
     if ( ! empty( $theme_mods ) && is_array( $theme_mods ) ) {
 
@@ -114,11 +113,16 @@ class ThemeModType extends WPObjectType {
 								],
 								'resolve'			=> function( $root, $args, AppContext $context, ResolveInfo $info ) use( $mod ) {
 									/**
+									 * Get nav_menu_locations
+									 */
+									$nav_menus = get_theme_mod( $mod );
+									/**
 									 * Retrieve menu
 									 */
-									if ( ! empty( $args[ 'location' ] ) ) {
-										if ( ! empty( $root[ $args[ 'location' ] ] ) ) {
-											return DataSource::resolve_term_object( $root[ $args[ 'location' ] ], 'nav_menu' );
+									if ( ! empty( $args[ 'location' ] ) && ! empty ( $nav_menus ) ) {
+										$location = $args[ 'location' ];
+										if ( ! empty( $nav_menus[ $location ] ) ) {
+											return DataSource::resolve_term_object( $nav_menus[ $location ], 'nav_menu' );
 										}
 									}
 									return null;

@@ -165,15 +165,6 @@ class Wp_Graphql_Extra_Options_Admin {
 		);
 
 		add_settings_field(
-			$this->option_name . '_debug',
-			__( 'Debug Mode', 'wp-graphql-extra-options' ),
-			array( $this, $this->option_name . '_debug_cb' ),
-			$this->plugin_name,
-			$this->option_name . '_general',
-			array( 'label_for' => $this->option_name . '_debug' )
-		);
-
-		add_settings_field(
 			$this->option_name . '_endpoint',
 			__( 'WPGraphQL Endpoint', 'wp-graphql-extra-options' ),
 			array( $this, $this->option_name . '_endpoint_cb' ),
@@ -207,12 +198,6 @@ class Wp_Graphql_Extra_Options_Admin {
 			$this->plugin_name,
 			$this->option_name . '_general',
 			array( 'label_for' => $this->option_name . '_filter_mods' )
-		);
-
-		register_setting(
-			$this->plugin_name,
-			$this->option_name . '_debug',
-			array( $this, $this->option_name . '_sanitize_debug' )
 		);
 
 		register_setting(
@@ -269,20 +254,6 @@ class Wp_Graphql_Extra_Options_Admin {
 		}
 
 		return $this->$name;
-
-	}
-
-	/**
-	 * Return debug array if $this->_debug === true
-	 * @since  				0.4.0
-	 * @return array 	filtered query results
-	 */
-	public function graphql_execute( $result ) {
-
-		if ( $this->_debug ) {
-			return $result->toArray( Debug::INCLUDE_DEBUG_MESSAGE | Debug::RETHROW_INTERNAL_EXCEPTIONS );
-		}
-		return $result;
 
 	}
 
@@ -459,22 +430,6 @@ class Wp_Graphql_Extra_Options_Admin {
 	}
 
 	/**
-	 * Render checkbox for _debug field
-	 *
-	 * @since  0.4.0
-	 */
-	public function wp_graphql_extra_options_debug_cb() {
-		$checked = ( $this->_debug ) ? 'checked': '';
-		?>		
-			<input type="checkbox" <?php echo $checked ?> name="<?php echo $this->option_name . '_debug' ?>" id="<?php echo $this->option_name . '_debug' ?>" />
-			<br>
-			<span class="description">
-				<?php _e( 'Return errors in requests', 'wp-graphql-extra-options' ) ?>
-			</span>
-		<?php
-	}
-
-	/**
 	 * Render text field for _endpoint field
 	 *
 	 * @since  1.2.0
@@ -579,20 +534,6 @@ class Wp_Graphql_Extra_Options_Admin {
 				<?php echo 'The current valid types are "integer, "boolean", "number", "string"' ?>
 			</span>
 		<?php
-	}
-
-	/**
-	 * Sanitize the _debug value before being saved to database
-	 *
-	 * @param  string	$theme_mods $_POST value
-	 * @since  				0.4.0
-	 * @return string Sanitized value
-	 */
-	public function wp_graphql_extra_options_sanitize_debug( $debug ) {
-
-		if ( $debug ) return true;
-		return false;
-
 	}
 
 	/**
